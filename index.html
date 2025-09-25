@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Maintenance Report</title>
+   <link rel="icon" type="image/png" href="3.png">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      /* สีหลัก (Dark) */
+      --bg:#0b1220;
+      --bg-2:#0e1626;
+      --ink:#e5e7eb;
+      --muted:#a5b4fc;
+      --card:#ffffff14;          /* glass */
+      --line:#ffffff22;
+      --brand:#6ea8fe;
+      --brand-2:#8b5cf6;
+      --ring:#ffffff40;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      /* ขนาดไอคอนมาตรฐาน */
+      --icon-size: 84px;
+      --icon-img-scale: 0.82;    /* 82% ของกรอบ */
+      --radius-xl: 18px;
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fb;
+      --bg-2:#eef2ff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --card:#ffffffcc;
+      --line:#00000014;
+      --brand:#4f46e5;
+      --brand-2:#22c1c3;
+      --ring:#0000001f;
+      --shadow: 0 12px 30px rgba(16,24,40,.08);
+    }
+
+    /* Reset/พื้นฐาน */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Noto Sans Thai", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", sans-serif;
+      color:var(--ink);
+      line-height:1.5;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, var(--brand-2) 0%, transparent 40%),
+        radial-gradient(1000px 700px at 110% 30%, var(--brand) 0%, transparent 42%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+    }
+    .wrap{
+      min-height:100%;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:5;
+      backdrop-filter: blur(8px) saturate(150%);
+      background: var(--card);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      max-width:1080px; margin:0 auto; padding:12px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700;
+      letter-spacing:.2px;
+    }
+    .brand .dot{
+      width:10px; height:10px; border-radius:50%;
+      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow:0 0 0 4px #ffffff1a, 0 0 18px var(--brand-2);
+    }
+    .btn{
+      appearance:none; border:1px solid var(--line); background:#ffffff14;
+      color:var(--ink); padding:10px 14px; border-radius:14px; cursor:pointer;
+      font-weight:600; transition:.22s transform ease, .22s box-shadow ease, .22s background ease;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover{ transform:translateY(-1px) }
+    .btn:focus-visible{ outline:none; box-shadow:0 0 0 5px var(--ring) }
+
+    /* Main */
+    main{ max-width:1080px; margin:34px auto; padding:0 20px }
+    .hero{ display:grid; gap:6px; margin-bottom:22px }
+    .hero h1{ margin:0; font-size:clamp(22px, 3.3vw, 30px) }
+    .hero p{ margin:0; color:var(--muted) }
+
+    .grid{
+      display:grid; gap:20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    /* Card/Tile */
+    .tile{
+      position:relative; isolation:isolate; overflow:hidden;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(160deg, #ffffff18, #ffffff08);
+      border:1px solid var(--line);
+      backdrop-filter: blur(12px) saturate(140%);
+      padding:20px;
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+      box-shadow: var(--shadow);
+    }
+    .tile::after{
+      content:""; position:absolute; inset:auto -40px -40px auto; width:220px; height:120px;
+      background: radial-gradient(closest-side, #ffffff66, transparent 70%);
+      transform: rotate(10deg); opacity:0; transition:.35s;
+      pointer-events:none;
+    }
+    .tile:hover{ transform: translateY(-4px); border-color:#ffffff38 }
+    .tile:hover::after{ opacity:.9; transform: translateY(-8px) rotate(6deg) }
+    .tile:active{ transform:translateY(-1px) }
+    .tile a{
+      display:flex; gap:16px; align-items:center; text-decoration:none; color:inherit;
+    }
+    @media (max-width:520px){ .tile a{ flex-direction:row } }
+
+    /* Icon: ปรับขนาดด้วยตัวแปรได้ */
+    .icon{
+      --s: var(--icon-size);
+      --img: var(--icon-img-scale);
+      flex:0 0 auto;
+      width:var(--s); height:var(--s);
+      border-radius:16px;
+      background: #fff;
+      display:grid; place-items:center; overflow:hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18), inset 0 0 0 2px #ffffff24;
+    }
+    .icon img{
+      width: calc(var(--s) * var(--img));
+      height: calc(var(--s) * var(--img));
+      object-fit: contain;
+      transition: transform .25s ease;
+    }
+    .tile:hover .icon img{ transform: scale(1.03) }
+
+    /* ขยาย/ย่อไอคอนเฉพาะการ์ดได้ด้วย data-attr */
+    .tile[data-icon="sm"] .icon{ --s:72px }
+    .tile[data-icon="lg"] .icon{ --s:96px }
+    .tile[data-img="fit"] .icon{ --img:.94 }   /* ให้รูปเต็มกรอบมากขึ้น */
+    .tile[data-img="tight"] .icon{ --img:.78 } /* ให้รูปเว้นขอบมากขึ้น */
+
+    /* ข้อความ */
+    .meta{ display:grid; gap:6px; min-width:0 }
+    .title{ font-weight:700; font-size:18px; letter-spacing:.2px }
+    .desc{ color:var(--muted); font-size:14px }
+    .chip{
+      margin-top:4px; display:inline-block; font-size:12px; font-weight:700; letter-spacing:.3px;
+      padding:6px 10px; border-radius:999px; background:#ffffff14; border:1px solid var(--line);
+    }
+
+    footer{ color:var(--muted); font-size:12px; text-align:center; padding:18px 12px }
+
+    /* การช่วยการเข้าถึง */
+    .tile a:focus-visible{ outline:none; box-shadow:0 0 0 6px var(--ring); border-radius:var(--radius-xl) }
+
+    /* Motion ลดเมื่อผู้ใช้ตั้งค่าลดอนิเมชัน */
+    @media (prefers-reduced-motion: reduce){
+      .tile, .btn, .icon img{ transition:none !important }
+    }
+
+    /* Responsive ปรับขนาดไอคอนตามจอ */
+    @media (max-width:480px){
+      :root{ --icon-size:76px }
+    }
+    @media (min-width:1200px){
+      :root{ --icon-size:90px }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="wrap">
+    <header>
+      <nav class="nav" aria-label="Main">
+        <div class="brand"><span class="dot" aria-hidden="true"></span>Maintenance System</div>
+        <button class="btn" id="toggleTheme" aria-pressed="true" title="สลับโหมดแสง">🌙 Dark</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>บันทึกงานซ่อม & สต็อกอะไหล่</h1>
+        <p>Toshiba Consumer Products (Thailand) Co.ltd </p>
+      </section>
+
+      <section class="grid" aria-label="Primary actions">
+        <!-- ปุ่ม Report Maintenance -->
+        <!-- ปรับขนาดรูปได้ด้วย data-icon="sm|lg" และปรับอัตราเติมกรอบด้วย data-img="fit|tight" -->
+        <article class="tile" data-icon="lg" data-img="tight">
+          <a href="https://www.appsheet.com/start/3fb58ef5-4479-455a-b04b-cb2e7fd759c4?platform=desktop#appName=ReportMaintennance-321484445-25-05-26-3&vss=H4sIAAAAAAAAA52OvQ4CIRCE32VqnoDWmGiMNhobscBjSYh3cDk49UJ4dxd_Yqt2u7PzzU7GxdF1m3Rzhjzkz7aiCRJZYTf1pCAVZsGnIbQKQmGju6e4CHUoKEfxZhNFyPw9Kv__KuAM-eSso6HmVIr5F8PnSrBQ_SgC3Zj0qaVHSfaXwpoNzRjJ7LnCj6_j0s9vvfZmHQzHWd1GKndbTHqGUQEAAA==&view=Home" aria-label="ไปที่หน้า Report Maintenance">
+            <div class="icon">
+              <img src="2.png" alt="Report Maintenance">
+            </div>
+            <div class="meta">
+              <div class="title">Report Maintenance</div>
+              <div class="desc">บันทึกงานซ่อม & ประวัติ Loss Time</div>
+              <span class="chip">อัปเดตเรียลไทม์</span>
+            </div>
+          </a>
+        </article>
+
+        <!-- ปุ่ม Stock Spare Part -->
+        <article class="tile" data-icon="lg" data-img="fit">
+          <a href="https://apiwut465.github.io/MPR-spare-parts-management/" aria-label="ไปที่หน้า Stock Spare Part">
+            <div class="icon">
+              <img src="1.png" alt="Stock Spare Part">
+            </div>
+            <div class="meta">
+              <div class="title">Stock Spare Part</div>
+              <div class="desc">เช็คสต็อกอะไหล่ ประวัติการเบิก และแจ้งเตือนใกล้หมด</div>
+              <span class="chip">อัปเดตเรียลไทม์</span>
+            </div>
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="y"></span> Maintenance • MVR&MSR
+    </footer>
+  </div>
+
+  <script>
+    // ปีอัตโนมัติ
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Toggle Light/Dark
+    const btn = document.getElementById('toggleTheme');
+    const root = document.body;
+    function setLabel(){
+      const dark = root.getAttribute('data-theme') !== 'light';
+      btn.textContent = dark ? '🌙 Dark' : '☀️ Light';
+      btn.setAttribute('aria-pressed', String(dark));
+    }
+    btn.addEventListener('click', ()=>{
+      const isLight = root.getAttribute('data-theme') === 'light';
+      root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      setLabel();
+      localStorage.setItem('theme', root.getAttribute('data-theme'));
+    });
+    // โหลดธีมเดิม
+    const saved = localStorage.getItem('theme');
+    if(saved){ root.setAttribute('data-theme', saved); }
+    setLabel();
+  </script>
+</body>
+</html>
